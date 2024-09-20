@@ -1,26 +1,25 @@
 import { useState } from "react";
-import axios from "axios";
+import Router from 'next/router';
+import useRequest from "../../hooks/use-request";
 
 const signup = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState([]);
+  //const [errors, setErrors] = useState([]);
+  const { doRequest, errors } = useRequest({
+    url: '/api/users/signup',
+    method: 'post',
+    body: {
+        email, password
+    },
+    onSuccess: () =>  Router.push('/')
+  });
 
   const onSubmit = async e => {
     e.preventDefault();
-
-    try {
-        const response = await axios.post('/api/users/signup' , {
-            email,
-            password
-        });
-
-        console.log(response.data);
-    }   catch (err) {
-        console.log(err.response.data);
-        setErrors(err.response.data.errors);
-    }
+    
+    await doRequest();
   };
 
   return (
@@ -33,11 +32,13 @@ const signup = () => {
                 // type="email" 
                 onChange={e => setEmail(e.target.value)}
             />
-            {errors.find(err => err.field === 'email') && (
+            {/* Make changes accordingly to display the below line 
+            As of now errors is a JSX object from useRequest which needs to be changed  */}
+            {/* {errors && errors.find(err => err.field === 'email') && (
                 <div className="text-danger">
                 {errors.find(err => err.field === 'email').message}
                 </div>
-            )}
+            )} */}
         </div>
         <div className="form-group">
             <label>Password</label>
@@ -45,25 +46,13 @@ const signup = () => {
                 value={password}
                 type="password"
                 onChange={e => setPassword(e.target.value)}/>
-            {errors.find(err => err.field === 'password') && (
+            {/* {errors && errors.find(err => err.field === 'password') && (
                 <div className="text-danger">
                 {errors.find(err => err.field === 'password').message}
                 </div>
-            )}
+            )} */}
         </div>
-        {errors.some(err => !err.field) && (
-            <div className="alert alert-danger">
-                <h4>Oh ...</h4>
-                <ul className="my-0">
-                {errors
-                    .filter(err => !err.field)
-                    .map(err => (
-                    <li key={err.message}>{err.message}</li>
-                    ))}
-                </ul>
-            </div>
-        )}
-
+        {errors}
         <button className="btn btn-primary">Sign Up</button>
     </form>
   );
