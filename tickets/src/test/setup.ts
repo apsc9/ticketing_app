@@ -17,6 +17,8 @@ declare global {
     var signin: () => string[];
 }
 
+jest.mock('../nats-wrapper');
+
 let mongo: any;
 beforeAll(async () => {
     process.env.JWT_KEY = 'asdfasdf';
@@ -27,6 +29,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+    jest.clearAllMocks();
     if (!mongoose.connection.db) {
         throw new DatabaseConnectionError();
     }
