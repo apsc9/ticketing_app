@@ -4,6 +4,8 @@ const Header =  ({ currentUser }) => {
     const links = [
         !currentUser && { label: 'Sign Up', href: '/auth/signup' },
         !currentUser && { label: 'Sign In', href: '/auth/signin' },
+        currentUser && { label: 'Sell Tickets', href: '/tickets/new' },
+        currentUser && { label: 'My Orders', href: '/orders' },
         currentUser && { label: 'Sign Out', href: '/auth/signout' },
     ]
 
@@ -21,14 +23,16 @@ const Header =  ({ currentUser }) => {
 
     return (
         <nav className='navbar navbar-light bg-light'>
-            <Link className="navbar-brand" href="/">
-                Tikt-Tikt
-            </Link>
+            <div className='container-fluid'>
+                <Link className="navbar-brand" href="/">
+                    Tikt-Tikt
+                </Link>
 
-            <div className='d-flex justify-content-end'>
-                <ul className='nav d-flex align-items-center'>
-                    {links}
-                </ul>
+                <div className='d-flex justify-content-end'>
+                    <ul className='nav d-flex align-items-center'>
+                        {links}
+                    </ul>
+                </div>
             </div>
         </nav>
     );
